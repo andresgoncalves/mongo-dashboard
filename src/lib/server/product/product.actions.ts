@@ -35,8 +35,8 @@ export async function createProduct(data: IProduct) {
     return sendError("Error al registrar producto");
   }
 
-  revalidatePath("/products");
-  revalidatePath(`/products/[id]`);
+  revalidatePath("/(...dashboard)/products");
+  revalidatePath("/(...dashboard)/products/[id]");
   return sendMessage("Producto registrado exitosamente");
 }
 
