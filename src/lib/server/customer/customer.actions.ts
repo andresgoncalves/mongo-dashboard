@@ -35,8 +35,8 @@ export async function createCustomer(data: ICustomer | any) {
     return sendError("Error al registrar cliente");
   }
 
-  revalidatePath("/(...dashboard)/customers");
-  revalidatePath("/(...dashboard)/customers/[id]");
+  revalidatePath("/(dashboard)/customers");
+  revalidatePath("/(dashboard)/customers/[id]");
   return sendMessage("Cliente registrado exitosamente");
 }
 
