@@ -175,7 +175,7 @@ export default function DashboardPage() {
           </div>
         </div>
         <div className="grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2">
-          <div className="card bg-neutral-50 p-4 shadow">
+          <div className="card card-bordered bg-neutral-50 p-4">
             <Bar
               data={totalSalesChartData}
               options={{
@@ -195,7 +195,7 @@ export default function DashboardPage() {
               }}
             />
           </div>
-          <div className="card bg-neutral-50 p-4 shadow">
+          <div className="card card-bordered bg-neutral-50 p-4">
             <Bar
               data={salesByProductChartData}
               options={{
