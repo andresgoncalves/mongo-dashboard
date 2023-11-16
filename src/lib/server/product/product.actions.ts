@@ -6,8 +6,7 @@ import { IProduct, Products, productSchema } from "./product.model";
 import { revalidatePath } from "next/cache";
 
 export async function findAllProducts() {
-  const cursor = Products.find();
-  const products = await cursor.toArray();
+  const products = await Products.find().toArray();
   return sendData({ products });
 }
 
@@ -37,7 +36,7 @@ export async function createProduct(data: IProduct) {
   }
 
   revalidatePath("/products");
-  revalidatePath(`/products/${result.insertedId}`);
+  revalidatePath(`/products/[id]`);
   return sendMessage("Producto registrado exitosamente");
 }
 
@@ -59,9 +58,11 @@ export async function updateProduct(id: any, data: Partial<IProduct>) {
 
   if (!result.acknowledged) {
     return sendError("Error al actualizar producto");
+  } else if (result.matchedCount === 0) {
+    return sendError("Producto no encontrado");
   }
 
   revalidatePath("/products");
-  revalidatePath(`/products/${id}`);
+  revalidatePath("/products/[id]");
   return sendMessage("Producto actualizado exitosamente");
 }

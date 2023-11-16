@@ -1,5 +1,8 @@
 "use client";
 
+import Form from "@/components/forms/Form";
+import Input from "@/components/forms/Input";
+import TextArea from "@/components/forms/TextArea";
 import { useToast } from "@/lib/hooks/useToast";
 import {
   createProduct,
@@ -8,7 +11,7 @@ import {
 } from "@/lib/server/product/product.actions";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 export default function ProductPage() {
   const { notify } = useToast();
@@ -77,75 +80,53 @@ export default function ProductPage() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col gap-8 p-8">
-        <div className="card m-auto grid w-full max-w-[80ch] grid-cols-1 gap-8 p-8 shadow md:grid-cols-[1fr_1fr]">
-          <div className="skeleton h-6"></div>
-          <div className="skeleton h-6"></div>
-          <div className="skeleton col-span-2 h-12"></div>
-        </div>
-      </div>
+      <Form>
+        <div className="skeleton h-12"></div>
+        <div className="skeleton h-12"></div>
+        <div className="skeleton col-span-full h-16"></div>
+      </Form>
     );
   }
 
   return (
-    <div className="flex flex-col gap-8 p-8">
-      <div className="card m-auto grid w-full max-w-[80ch] grid-cols-1 gap-8 p-8 shadow md:grid-cols-[1fr_1fr]">
-        <label className="form-control">
-          <div className="label">
-            <div className="label-text space-x-1">
-              <span>Nombre del producto</span>
-              <span className="text-error">*</span>
-            </div>
-          </div>
-          <input
-            className="input input-bordered"
-            type="text"
-            name="name"
-            placeholder="Ingrese el nombre del producto"
-            value={formData.name}
-            onChange={handleFormChange}
-          />
-        </label>
-        <label className="form-control">
-          <div className="label">
-            <div className="label-text space-x-1">
-              <span>Código del producto</span>
-              <span className="text-error">*</span>
-            </div>
-          </div>
-          <input
-            className="input input-bordered"
-            type="text"
-            name="code"
-            placeholder="Ingrese el código del producto"
-            value={formData.code}
-            onChange={handleFormChange}
-          />
-        </label>
-        <label className="form-control col-span-full">
-          <div className="label">
-            <div className="label-text space-x-1">
-              <span>Descripción del producto</span>
-              <span className="text-error">*</span>
-            </div>
-          </div>
-          <textarea
-            className="textarea textarea-bordered"
-            placeholder="Ingrese la descripción del producto"
-            name="description"
-            value={formData.description}
-            onChange={handleFormChange}
-          />
-        </label>
-        <div className="col-span-full flex justify-end gap-4">
+    <Form
+      actions={
+        <>
           <button className="btn btn-primary" onClick={handleFormSubmit}>
             Guardar
           </button>
           <Link className="btn" href="/products">
             Cancelar
           </Link>
-        </div>
-      </div>
-    </div>
+        </>
+      }
+    >
+      <Input
+        label="Nombre del producto"
+        placeholder="Ingrese el nombre del producto"
+        type="text"
+        name="name"
+        value={formData.name}
+        onChange={handleFormChange}
+        required
+      />
+      <Input
+        label="Código del producto"
+        placeholder="Ingrese el código del producto"
+        type="text"
+        name="code"
+        value={formData.code}
+        onChange={handleFormChange}
+        required
+      />
+      <TextArea
+        label="Descripción del producto"
+        placeholder="Ingrese la descripción del producto"
+        name="description"
+        value={formData.description}
+        onChange={handleFormChange}
+        required
+      />
+    </Form>
   );
 }
