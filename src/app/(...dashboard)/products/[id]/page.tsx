@@ -19,8 +19,8 @@ export default function ProductPage() {
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (id !== "new") {
-      (async () => {
+    (async () => {
+      if (id !== "new") {
         const res = await findProduct(id);
         if (res.status === "success") {
           setFormData(res.data.product);
@@ -31,9 +31,9 @@ export default function ProductPage() {
           );
           router.replace("/products");
         }
-      })();
-    }
-    setLoading(false);
+      }
+      setLoading(false);
+    })();
   }, [id, notify, router]);
 
   const [formData, setFormData] = useState({
