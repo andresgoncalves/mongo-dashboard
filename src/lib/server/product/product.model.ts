@@ -7,12 +7,10 @@ export interface IProduct {
   description: string;
 }
 
-export const productSchema = z
-  .object({
-    name: z.string(),
-    code: z.string(),
-    description: z.string(),
-  })
-  .strict();
+export const productSchema = z.object({
+  name: z.string(),
+  code: z.string(),
+  description: z.string(),
+});
 
-export const Product = db.collection("product");
+export const Products = db.collection<IProduct>("products");

@@ -1,13 +1,40 @@
 "use client";
 
-import Toast from "@/components/Toast";
 import { useToast } from "@/lib/hooks/useToast";
-import { createProduct } from "@/lib/server/product/product.actions";
+import {
+  createProduct,
+  findProduct,
+  updateProduct,
+} from "@/lib/server/product/product.actions";
 import Link from "next/link";
-import { ChangeEvent, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 
 export default function ProductPage() {
-  const [toast, notify] = useToast();
+  const { notify } = useToast();
+
+  const { id } = useParams();
+  const router = useRouter();
+
+  const [isLoading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (id !== "new") {
+      (async () => {
+        const res = await findProduct(id);
+        if (res.status === "success") {
+          setFormData(res.data.product);
+        } else {
+          notify(
+            res.status,
+            res.errors.map((error) => error.message),
+          );
+          router.replace("/products");
+        }
+      })();
+    }
+    setLoading(false);
+  }, [id, notify, router]);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -25,15 +52,39 @@ export default function ProductPage() {
   }
 
   async function handleFormSubmit() {
-    const result = await createProduct(formData);
-    if (result.status === "success") {
-      notify(result.status, result.data.message);
+    if (id === "new") {
+      const result = await createProduct(formData);
+      if (result.status === "success") {
+        notify(result.status, result.data.message);
+      } else {
+        notify(
+          result.status,
+          result.errors.map((error) => error.message),
+        );
+      }
     } else {
-      notify(
-        result.status,
-        result.errors.map((error) => error.message),
-      );
+      const result = await updateProduct(id, formData);
+      if (result.status === "success") {
+        notify(result.status, result.data.message);
+      } else {
+        notify(
+          result.status,
+          result.errors.map((error) => error.message),
+        );
+      }
     }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-8 p-8">
+        <div className="card m-auto grid w-full max-w-[80ch] grid-cols-1 gap-8 p-8 shadow md:grid-cols-[1fr_1fr]">
+          <div className="skeleton h-6"></div>
+          <div className="skeleton h-6"></div>
+          <div className="skeleton col-span-2 h-12"></div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -95,7 +146,6 @@ export default function ProductPage() {
           </Link>
         </div>
       </div>
-      <Toast data={toast} />
     </div>
   );
 }

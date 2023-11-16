@@ -1,14 +1,18 @@
-import { ToastData } from "@/lib/hooks/useToast";
+"use client";
+
+import { useToast } from "@/lib/hooks/useToast";
 import {
   CheckCircleIcon,
   InformationCircleIcon,
   XCircleIcon,
 } from "@heroicons/react/24/outline";
 
-export default function Toast({ data }: { data: ToastData[] }) {
+export default function Toast() {
+  const { toast } = useToast();
+
   return (
     <div className="toast toast-center w-full">
-      {data.map((alert, key) =>
+      {toast.map((alert, key) =>
         alert.status === "success" ? (
           <div key={key} className="alert alert-success">
             <CheckCircleIcon className="h-6 w-6" />

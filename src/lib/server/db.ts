@@ -1,6 +1,10 @@
 import { MongoClient } from "mongodb";
 
-const client = new MongoClient(process.env.MONGO_URI || "");
+if (!process.env.MONGO_URI) {
+  throw Error("MONGO_URI no configurado");
+}
+
+const client = new MongoClient(process.env.MONGO_URI);
 
 const db = client.db(process.env.MONGO_DB_NAME);
 
