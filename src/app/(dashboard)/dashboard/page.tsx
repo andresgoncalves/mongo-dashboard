@@ -1,7 +1,7 @@
 "use client";
 
+import SaleStats from "@/components/charts/SaleStats";
 import ProductCountByCategoryChart from "@/components/charts/ProductCountByCategoryChart";
-import { getProductCountByCategory } from "@/lib/server/charts";
 import {
   BarElement,
   CategoryScale,
@@ -94,17 +94,8 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col gap-8 p-8">
       <div className="flex flex-col gap-2">
-        <h1 className="mx-4 text-xl font-medium">Resumen semanal</h1>
-        <div className="stats stats-vertical shadow sm:stats-horizontal">
-          <div className="stat gap-2">
-            <div className="stat-title">Ingresos totales</div>
-            <div className="stat-value">$ 12345,79</div>
-          </div>
-          <div className="stat gap-2">
-            <div className="stat-title">Ventas totales</div>
-            <div className="stat-value">100</div>
-          </div>
-        </div>
+        <h1 className="mx-4 text-xl font-medium">Resumen histórico</h1>
+        <SaleStats />
       </div>
       <div className="flex flex-col gap-8">
         <div className="flex">

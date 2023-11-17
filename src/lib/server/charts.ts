@@ -2,8 +2,39 @@
 
 import { Categories } from "./category/category.model";
 import { Products } from "./product/product.model";
-import { sendData } from "./utils";
+import { Sales } from "./sale/sale.model";
+import { sendData, sendError } from "./utils";
 import { ObjectId } from "mongodb";
+
+export async function getSaleStats() {
+  const saleStats = await Sales.aggregate<{
+    totalEarnings: number;
+    salesCount: number;
+  }>([
+    {
+      $group: {
+        _id: "saleStats",
+        totalEarnings: {
+          $sum: "$total",
+        },
+        salesCount: {
+          $count: {},
+        },
+      },
+    },
+  ]).next();
+
+  if (!saleStats) {
+    return sendData({
+      saleStats: {
+        totalEarnings: 0,
+        salesCount: 0,
+      },
+    });
+  }
+
+  return sendData({ saleStats });
+}
 
 export async function getProductCountByCategory() {
   const productCountByCategory = await Categories.aggregate<{
