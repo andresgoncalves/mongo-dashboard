@@ -36,7 +36,10 @@ export async function createCategory(data: ICategory) {
   }
 
   revalidatePath("/(dashboard)/categories");
-  return sendMessage("Categoría registrada exitosamente");
+  return sendData(
+    { _id: result.insertedId },
+    "Categoría registrada exitosamente",
+  );
 }
 
 export async function updateCategory(id: any, data: Partial<ICategory>) {

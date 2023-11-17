@@ -50,7 +50,10 @@ export async function createProduct(data: IProduct) {
   }
 
   revalidatePath("/(dashboard)/products");
-  return sendMessage("Producto registrado exitosamente");
+  return sendData(
+    { _id: result.insertedId },
+    "Producto registrado exitosamente",
+  );
 }
 
 export async function updateProduct(id: any, data: Partial<IProduct>) {

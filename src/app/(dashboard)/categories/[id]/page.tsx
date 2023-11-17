@@ -57,6 +57,7 @@ export default function CategoryPage() {
       const result = await createCategory(formData);
       if (result.status === "success") {
         notify(result.status, result.data.message);
+        router.replace(`${result.data._id}`);
       } else {
         notify(
           result.status,

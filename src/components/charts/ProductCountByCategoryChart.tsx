@@ -54,6 +54,16 @@ export default function ProductCountByCategoryChart() {
               display: true,
               text: "Cantidad de productos por categoría",
             },
+            tooltip: {
+              callbacks: {
+                label(tooltipItem) {
+                  if (tooltipItem.raw === 1) {
+                    return `${tooltipItem.raw} producto`;
+                  }
+                  return `${tooltipItem.raw} productos`;
+                },
+              },
+            },
           },
         }}
       />

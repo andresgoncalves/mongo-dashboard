@@ -69,6 +69,7 @@ export default function CustomerPage() {
       const result = await createCustomer(data);
       if (result.status === "success") {
         notify(result.status, result.data.message);
+        router.replace(`${result.data._id}`);
       } else {
         notify(
           result.status,

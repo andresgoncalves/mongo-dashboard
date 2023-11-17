@@ -36,7 +36,10 @@ export async function createCustomer(data: ICustomer | any) {
   }
 
   revalidatePath("/(dashboard)/customers");
-  return sendMessage("Cliente registrado exitosamente");
+  return sendData(
+    { _id: result.insertedId },
+    "Cliente registrado exitosamente",
+  );
 }
 
 export async function updateCustomer(id: any, data: Partial<ICustomer> | any) {

@@ -85,6 +85,7 @@ export default function ProductPage() {
       });
       if (result.status === "success") {
         notify(result.status, result.data.message);
+        router.replace(`${result.data._id}`);
       } else {
         notify(
           result.status,

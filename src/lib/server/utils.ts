@@ -22,11 +22,14 @@ interface ServerActionError {
   }[];
 }
 
-export function sendData<T>(data: T): ServerActionData<T> {
+export function sendData<T>(
+  data: T,
+  message: string = "Operación exitosa",
+): ServerActionData<T> {
   return {
     status: "success",
     data: {
-      message: "Operación exitosa",
+      message,
       ...data,
     },
   };
