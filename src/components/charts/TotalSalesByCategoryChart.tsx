@@ -1,6 +1,6 @@
 "use client";
 
-import { getProductCountByCategory } from "@/lib/server/charts";
+import { getTotalSalesByCategory } from "@/lib/server/charts";
 import {
   BarElement,
   CategoryScale,
@@ -15,16 +15,17 @@ import { Bar } from "react-chartjs-2";
 
 Chart.register(BarElement, CategoryScale, LinearScale, Title, Tooltip);
 
-export default function ProductCountByCategoryChart() {
+export default function TotalSalesByCategoryChart() {
   const [chartData, setChartData] = useState<ChartData<"bar">>({
     datasets: [],
   });
 
   useEffect(() => {
     (async () => {
-      const result = await getProductCountByCategory();
+      const result = await getTotalSalesByCategory();
       if (result.status === "success") {
-        const rawData = result.data.productCountByCategory;
+        const rawData = result.data.totalSalesByCategory;
+        console.log(rawData);
         setChartData({
           labels: rawData.map(({ name }) => name),
           datasets: [
@@ -53,15 +54,15 @@ export default function ProductCountByCategoryChart() {
           plugins: {
             title: {
               display: true,
-              text: "Cantidad de productos por categoría",
+              text: "Ventas totales por categoría",
             },
             tooltip: {
               callbacks: {
                 label(tooltipItem) {
                   if (tooltipItem.raw === 1) {
-                    return `${tooltipItem.raw} producto`;
+                    return `${tooltipItem.raw} venta`;
                   }
-                  return `${tooltipItem.raw} productos`;
+                  return `${tooltipItem.raw} ventas`;
                 },
               },
             },

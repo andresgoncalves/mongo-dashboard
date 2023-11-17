@@ -1,7 +1,7 @@
 "use server";
 
 import { number } from "zod";
-import { Categories } from "./category/category.model";
+import { Categories, ICategory } from "./category/category.model";
 import { Products } from "./product/product.model";
 import { Sales } from "./sale/sale.model";
 import { sendData } from "./utils";
@@ -72,7 +72,7 @@ export async function getProductCountByCategory() {
 export async function getTotalSalesByPeriod() {
   const currentDate = new Date();
   currentDate.setHours(0);
-  console.log(currentDate);
+
   const daysOfWeek = Array(7)
     .fill(0)
     .map((_, key) => {
@@ -107,11 +107,6 @@ export async function getTotalSalesByPeriod() {
             count: { $count: {} },
           },
         },
-        {
-          $set: {
-            date: start,
-          },
-        },
       ])
         .next()
         .then((result) => ({ date: start, count: result?.count || 0 })),
@@ -126,4 +121,96 @@ export async function getTotalSalesByPeriod() {
   );
 
   return sendData({ totalSalesByWeek });
+}
+
+export async function getTotalEarningsByPeriod() {
+  const currentDate = new Date();
+  currentDate.setHours(0);
+
+  const daysOfWeek = Array(7)
+    .fill(0)
+    .map((_, key) => {
+      const start = new Date(currentDate);
+      start.setDate(start.getDate() - key);
+      const end = new Date(currentDate);
+      end.setDate(currentDate.getDate() - key + 1);
+      return {
+        start,
+        end,
+      };
+    });
+
+  const totalEarningsByWeek = await Promise.all(
+    daysOfWeek.map(({ start, end }) =>
+      Sales.aggregate<{
+        date: Date;
+        total: number;
+      }>([
+        {
+          $match: {
+            datetime: {
+              $gte: start,
+              $lt: end,
+            },
+          },
+        },
+        {
+          $group: {
+            _id: "totalSalesByWeek",
+            total: { $sum: "$total" },
+          },
+        },
+      ])
+        .next()
+        .then((result) => ({ date: start, total: result?.total || 0 })),
+    ),
+  ).then((sales) =>
+    sales.reduce<
+      {
+        date: Date;
+        total: number;
+      }[]
+    >((prev, sale) => [...prev, sale], []),
+  );
+
+  console.log(totalEarningsByWeek);
+
+  return sendData({ totalEarningsByWeek });
+}
+
+export async function getTotalSalesByCategory() {
+  const totalSalesByCategory = await Categories.aggregate<{
+    name: number;
+    count: number;
+  }>([
+    {
+      $lookup: {
+        from: Products.collectionName,
+        localField: "_id",
+        foreignField: "category._id",
+        as: "products",
+      },
+    },
+    {
+      $lookup: {
+        from: Sales.collectionName,
+        localField: "products._id",
+        foreignField: "items.product._id",
+        as: "sales",
+      },
+    },
+    {
+      $project: {
+        name: 1,
+        count: { $size: "$sales" },
+      },
+    },
+    {
+      $sort: {
+        count: -1,
+      },
+    },
+  ]).toArray();
+
+  return sendData({ totalSalesByCategory });
 }

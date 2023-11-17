@@ -57,7 +57,7 @@ export default function DashboardLayout({
         <input id="drawer-toggle" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content flex flex-col sm:flex-row">
           {/* Closed sidebar */}
-          <div className="menu menu-horizontal min-h-0 items-center bg-base-100 shadow sm:menu-vertical sm:min-h-screen">
+          <div className="menu menu-horizontal sticky top-0 z-10 min-h-0 items-center bg-base-100 shadow sm:menu-vertical sm:static sm:min-h-[100dvh]">
             <label
               className="btn btn-ghost sm:mb-8"
               htmlFor="drawer-toggle"
@@ -81,13 +81,13 @@ export default function DashboardLayout({
             </ul>
           </div>
           {/* Main content */}
-          <main className="flex flex-1 flex-col sm:max-h-screen sm:overflow-y-auto">
+          <main className="m-auto flex max-w-screen-2xl flex-1 flex-col sm:max-h-screen sm:overflow-y-auto">
             {children}
           </main>
           <Toast />
         </div>
         {/* Open sidebar */}
-        <div className="drawer-side">
+        <div className="drawer-side z-20">
           <label className="drawer-overlay" htmlFor="drawer-toggle"></label>
           <div className="menu menu-vertical min-h-screen min-w-[12rem] bg-base-100 shadow">
             <label

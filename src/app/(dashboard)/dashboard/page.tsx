@@ -14,6 +14,8 @@ import {
 import { useMemo, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import TotalSalesByWeekChart from "@/components/charts/TotalSalesByWeekChart";
+import TotalSalesByCategoryChart from "@/components/charts/TotalSalesByCategoryChart";
+import TotalEarningsByWeekChart from "@/components/charts/TotalEarningsByWeekChart";
 
 Chart.register(BarElement, CategoryScale, LinearScale, Tooltip, Title);
 Chart.defaults.plugins.title = {
@@ -125,8 +127,10 @@ export default function DashboardPage() {
             />
           </div>
         </div>
-        <div className="grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
           <TotalSalesByWeekChart />
+          <TotalEarningsByWeekChart />
+          <TotalSalesByCategoryChart />
           <ProductCountByCategoryChart />
         </div>
       </div>
