@@ -88,7 +88,7 @@ export default function DashboardLayout({
         </div>
         {/* Open sidebar */}
         <div className="drawer-side">
-          <div className="drawer-overlay"></div>
+          <label className="drawer-overlay" htmlFor="drawer-toggle"></label>
           <div className="menu menu-vertical min-h-screen min-w-[12rem] bg-base-100 shadow">
             <label
               className="btn btn-ghost mb-8 self-start"
