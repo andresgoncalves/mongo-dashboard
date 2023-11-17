@@ -36,7 +36,6 @@ export async function createProduct(data: IProduct) {
   }
 
   revalidatePath("/(dashboard)/products");
-  revalidatePath("/(dashboard)/products/[id]");
   return sendMessage("Producto registrado exitosamente");
 }
 
@@ -62,7 +61,6 @@ export async function updateProduct(id: any, data: Partial<IProduct>) {
     return sendError("Producto no encontrado");
   }
 
-  revalidatePath("/products");
-  revalidatePath("/products/[id]");
+  revalidatePath("/(dashboard)/products");
   return sendMessage("Producto actualizado exitosamente");
 }

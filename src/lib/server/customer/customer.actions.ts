@@ -36,7 +36,6 @@ export async function createCustomer(data: ICustomer | any) {
   }
 
   revalidatePath("/(dashboard)/customers");
-  revalidatePath("/(dashboard)/customers/[id]");
   return sendMessage("Cliente registrado exitosamente");
 }
 
@@ -62,7 +61,6 @@ export async function updateCustomer(id: any, data: Partial<ICustomer> | any) {
     return sendError("Cliente no encontrado");
   }
 
-  revalidatePath("/customers");
-  revalidatePath("/customers/[id]");
+  revalidatePath("/(dashboard)/customers");
   return sendMessage("Cliente actualizado exitosamente");
 }

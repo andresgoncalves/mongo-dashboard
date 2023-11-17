@@ -3,6 +3,8 @@ import { findAllProducts } from "@/lib/server/product/product.actions";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export default async function ProductsPage() {
   const {
     data: { products },
