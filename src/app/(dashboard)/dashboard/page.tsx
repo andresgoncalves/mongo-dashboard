@@ -13,6 +13,7 @@ import {
 } from "chart.js";
 import { useMemo, useState } from "react";
 import { Bar } from "react-chartjs-2";
+import TotalSalesByWeekChart from "@/components/charts/TotalSalesByWeekChart";
 
 Chart.register(BarElement, CategoryScale, LinearScale, Tooltip, Title);
 Chart.defaults.plugins.title = {
@@ -125,26 +126,7 @@ export default function DashboardPage() {
           </div>
         </div>
         <div className="grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2">
-          <div className="card card-bordered bg-neutral-50 p-4">
-            <Bar
-              data={totalSalesChartData}
-              options={{
-                plugins: {
-                  title: {
-                    display: true,
-                    font: { size: 20, weight: "400" },
-                    text: `Ventas totales por ${
-                      timeFrame === "week"
-                        ? "día"
-                        : timeFrame === "trimester"
-                          ? "semana"
-                          : "mes"
-                    }`,
-                  },
-                },
-              }}
-            />
-          </div>
+          <TotalSalesByWeekChart />
           <ProductCountByCategoryChart />
         </div>
       </div>
