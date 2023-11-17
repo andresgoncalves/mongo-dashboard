@@ -81,7 +81,7 @@ export default function DashboardLayout({
             </ul>
           </div>
           {/* Main content */}
-          <main className="m-auto flex max-w-screen-2xl flex-1 flex-col sm:max-h-screen sm:overflow-y-auto">
+          <main className="mx-auto flex max-w-screen-2xl flex-1 flex-col sm:max-h-screen sm:overflow-y-auto">
             {children}
           </main>
           <Toast />
