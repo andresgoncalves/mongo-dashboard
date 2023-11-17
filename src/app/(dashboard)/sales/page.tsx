@@ -12,7 +12,7 @@ export default async function SalesPage() {
 
   return (
     <CardGrid
-      title="Productos"
+      title="Ventas"
       actions={
         <Link className="btn btn-primary" href="/sales/new">
           Agregar

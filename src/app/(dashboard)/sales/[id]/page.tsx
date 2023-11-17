@@ -168,6 +168,7 @@ export default function SalePage() {
     };
 
     setItems((items) => [item, ...items]);
+    setFormData((formData) => ({ ...formData, productCode: "" }));
   }
 
   async function handleRemoveItem(productId: string) {
@@ -213,7 +214,7 @@ export default function SalePage() {
         actions={
           <>
             <button className="btn btn-primary" onClick={handleFormSubmit}>
-              Guardar
+              {id === "new" ? "Registrar" : "Guardar"}
             </button>
             <Link className="btn" href="/sales">
               Cancelar
@@ -238,8 +239,9 @@ export default function SalePage() {
         />
       </Form>
       <Form>
-        <div className="col-span-full flex items-end gap-4">
+        <div className="col-span-full flex flex-col items-end gap-4 sm:flex-row">
           <Input
+            className="w-full"
             label="Código del producto"
             placeholder="Ingrese el código del producto"
             type="text"
