@@ -28,10 +28,12 @@ export function sendData<T>(
 ): ServerActionData<T> {
   return {
     status: "success",
-    data: {
-      message,
-      ...data,
-    },
+    data: JSON.parse(
+      JSON.stringify({
+        message,
+        ...data,
+      }),
+    ),
   };
 }
 
