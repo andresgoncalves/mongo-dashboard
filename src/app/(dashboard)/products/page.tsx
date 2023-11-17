@@ -19,11 +19,8 @@ export default async function ProductsPage() {
         </Link>
       }
     >
-      {products.map((product, key) => (
-        <div
-          key={`${key}_${product.code}`}
-          className="card card-bordered flex-row"
-        >
+      {products.map((product) => (
+        <div key={`${product._id}`} className="card card-bordered flex-row">
           <div className="card-body">
             <div className="card-title">{product.name}</div>
             <div>{product.description}</div>

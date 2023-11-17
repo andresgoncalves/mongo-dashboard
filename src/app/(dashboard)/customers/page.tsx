@@ -20,10 +20,7 @@ export default async function CustomerPage() {
       }
     >
       {customers.map((customer, key) => (
-        <div
-          key={`${key}_${customer.dni}`}
-          className="card card-bordered flex-row"
-        >
+        <div key={`${customer._id}`} className="card card-bordered flex-row">
           <div className="card-body">
             <div className="card-title">
               {customer.firstName} {customer.lastName}

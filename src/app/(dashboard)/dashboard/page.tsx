@@ -1,5 +1,7 @@
 "use client";
 
+import ProductCountByCategoryChart from "@/components/charts/ProductCountByCategoryChart";
+import { getProductCountByCategory } from "@/lib/server/charts";
 import {
   BarElement,
   CategoryScale,
@@ -13,6 +15,10 @@ import { useMemo, useState } from "react";
 import { Bar } from "react-chartjs-2";
 
 Chart.register(BarElement, CategoryScale, LinearScale, Tooltip, Title);
+Chart.defaults.plugins.title = {
+  ...Chart.defaults.plugins.title,
+  font: { size: 20, weight: "400" },
+};
 
 export default function DashboardPage() {
   const [timeFrame, setTimeFrame] = useState<"week" | "trimester" | "year">(
@@ -85,53 +91,6 @@ export default function DashboardPage() {
     }
   }, [timeFrame]);
 
-  const salesByProductChartData = useMemo<ChartData<"bar">>(() => {
-    switch (timeFrame) {
-      case "week":
-        return {
-          labels: [
-            "Maquillaje",
-            "Pintura de uñas",
-            "Tinte de cabello",
-            "Mascarillas",
-          ],
-          datasets: [
-            {
-              data: [16, 8, 4, 2],
-            },
-          ],
-        };
-      case "trimester":
-        return {
-          labels: [
-            "Tinte de cabello",
-            "Maquillaje",
-            "Mascarillas",
-            "Pintura de uñas",
-          ],
-          datasets: [
-            {
-              data: [12, 10, 6, 4],
-            },
-          ],
-        };
-      case "year":
-        return {
-          labels: [
-            "Tinte de cabello",
-            "Maquillaje",
-            "Mascarillas",
-            "Pintura de uñas",
-          ],
-          datasets: [
-            {
-              data: [48, 40, 28, 20],
-            },
-          ],
-        };
-    }
-  }, [timeFrame]);
-
   return (
     <div className="flex flex-col gap-8 p-8">
       <div className="flex flex-col gap-2">
@@ -195,21 +154,7 @@ export default function DashboardPage() {
               }}
             />
           </div>
-          <div className="card card-bordered bg-neutral-50 p-4">
-            <Bar
-              data={salesByProductChartData}
-              options={{
-                indexAxis: "y",
-                plugins: {
-                  title: {
-                    display: true,
-                    font: { size: 20, weight: "400" },
-                    text: `Productos más vendidos`,
-                  },
-                },
-              }}
-            />
-          </div>
+          <ProductCountByCategoryChart />
         </div>
       </div>
     </div>

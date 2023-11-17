@@ -7,6 +7,7 @@ import {
   BriefcaseIcon,
   BuildingStorefrontIcon,
   ChartBarIcon,
+  TagIcon,
   UserGroupIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
@@ -42,6 +43,11 @@ export default function DashboardLayout({
       href: "/customers",
       title: "Clientes",
       Icon: UserGroupIcon,
+    },
+    {
+      href: "/categories",
+      title: "Categorías",
+      Icon: TagIcon,
     },
   ];
 

@@ -4,6 +4,7 @@ import { ObjectId } from "mongodb";
 import { sendData, sendError, sendMessage } from "../utils";
 import { IProduct, Products, productSchema } from "./product.model";
 import { revalidatePath } from "next/cache";
+import { Categories } from "../category/category.model";
 
 export async function findAllProducts() {
   const products = await Products.find().toArray();
@@ -19,6 +20,12 @@ export async function findProduct(id: any) {
   if (!product) {
     return sendError("Producto no encontrado");
   }
+
+  const category = await Categories.findOne({ _id: product.category._id });
+  if (category) {
+    product.category = category;
+  }
+
   return sendData({ product });
 }
 
@@ -26,6 +33,13 @@ export async function createProduct(data: IProduct) {
   const validation = productSchema.safeParse(data);
   if (!validation.success) {
     return sendError(validation.error);
+  }
+
+  const category = await Categories.findOne({
+    _id: new ObjectId(data.category._id),
+  });
+  if (!category) {
+    return sendError("Categoría no encontrada");
   }
 
   const product = validation.data;
@@ -47,6 +61,15 @@ export async function updateProduct(id: any, data: Partial<IProduct>) {
   const validation = productSchema.partial().safeParse(data);
   if (!validation.success) {
     return sendError(validation.error);
+  }
+
+  if (data.category) {
+    const category = await Categories.findOne({
+      _id: new ObjectId(data.category._id),
+    });
+    if (!category) {
+      return sendError("Categoría no encontrada");
+    }
   }
 
   const product = validation.data;
