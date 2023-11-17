@@ -22,6 +22,19 @@ export async function findCustomer(id: any) {
   return sendData({ customer });
 }
 
+export async function findCustomerByDni(dni: number) {
+  const validation = customerSchema.shape.dni.safeParse(dni);
+  if (!validation.success) {
+    return sendError(validation.error);
+  }
+
+  const customer = await Customers.findOne({ dni: validation.data });
+  if (!customer) {
+    return sendError("Cliente no encontrado");
+  }
+  return sendData({ customer });
+}
+
 export async function createCustomer(data: ICustomer | any) {
   const validation = customerSchema.safeParse(data);
   if (!validation.success) {

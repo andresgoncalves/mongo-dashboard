@@ -58,6 +58,7 @@ export default function ProductPage() {
 
   const [formData, setFormData] = useState({
     name: "",
+    code: "",
     description: "",
     category: "",
     price: "",
@@ -144,6 +145,15 @@ export default function ProductPage() {
         onChange={handleFormChange}
         required
       />
+      <Input
+        label="Código"
+        placeholder="Ingrese el código del producto"
+        type="text"
+        name="code"
+        value={formData.code}
+        onChange={handleFormChange}
+        required
+      />
       <Select
         label="Categoría"
         placeholder="Seleccione la categoría del producto"
@@ -183,7 +193,6 @@ export default function ProductPage() {
         name="description"
         value={formData.description}
         onChange={handleFormChange}
-        required
       />
     </Form>
   );

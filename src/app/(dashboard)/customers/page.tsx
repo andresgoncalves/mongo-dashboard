@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
-export default async function CustomerPage() {
+export default async function CustomersPage() {
   const {
     data: { customers },
   } = await findAllCustomers();
