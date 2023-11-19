@@ -7,11 +7,11 @@ import {
   XCircleIcon,
 } from "@heroicons/react/24/outline";
 
-export default function Toast() {
+export default function Toast({ className }: { className: string }) {
   const { toast } = useToast();
 
   return (
-    <div className="toast toast-center w-full">
+    <div className={`toast toast-center w-full ${className}`}>
       {toast.map((alert, key) =>
         alert.status === "success" ? (
           <div key={key} className="alert alert-success">

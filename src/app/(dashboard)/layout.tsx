@@ -30,11 +30,6 @@ export default function DashboardLayout({
       Icon: BuildingStorefrontIcon,
     },
     {
-      href: "/services",
-      title: "Servicios",
-      Icon: BookOpenIcon,
-    },
-    {
       href: "/sales",
       title: "Ventas",
       Icon: BriefcaseIcon,
@@ -84,7 +79,7 @@ export default function DashboardLayout({
           <main className="mx-auto flex max-w-screen-2xl flex-1 flex-col sm:max-h-screen sm:overflow-y-auto">
             {children}
           </main>
-          <Toast />
+          <Toast className="z-20" />
         </div>
         {/* Open sidebar */}
         <div className="drawer-side z-20">
