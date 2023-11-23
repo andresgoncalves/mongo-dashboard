@@ -2,24 +2,17 @@
 
 import Form from "@/components/forms/Form";
 import Input from "@/components/forms/Input";
+import Select from "@/components/forms/Select";
 import { useToast } from "@/lib/hooks/useToast";
 import { findCustomerByDni } from "@/lib/server/customer/customer.actions";
-import {
-  findProduct,
-  findProductByCode,
-} from "@/lib/server/product/product.actions";
+import { findProductByCode } from "@/lib/server/product/product.actions";
 import {
   createSale,
   findSale,
   updateSale,
 } from "@/lib/server/sale/sale.actions";
 import { ISale } from "@/lib/server/sale/sale.model";
-import {
-  MinusCircleIcon,
-  MinusIcon,
-  PlusIcon,
-  TrashIcon,
-} from "@heroicons/react/24/outline";
+import { MinusIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -42,9 +35,9 @@ export default function SalePage() {
             customerDni: `${res.data.sale.customer.dni}`,
             customerName: `${res.data.sale.customer.firstName} ${res.data.sale.customer.lastName}`,
             productCode: "",
+            paymentMethod: res.data.sale.payment.method,
           });
 
-          console.log(res.data.sale.items);
           setItems(res.data.sale.items);
         } else {
           notify(
@@ -66,12 +59,12 @@ export default function SalePage() {
     customerDni: "",
     customerName: "",
     productCode: "",
+    paymentMethod: "",
   });
 
   useEffect(() => {
     if (formData.customerDni) {
       const timeoutId = setTimeout(async () => {
-        console.log(formData.customerDni);
         const res = await findCustomerByDni(Number(formData.customerDni));
         if (res.status === "success") {
           setFormData((formData) => ({
@@ -120,6 +113,14 @@ export default function SalePage() {
           product: item.product,
           amount: Number(item.amount),
         })),
+        payment: {
+          method: formData.paymentMethod as
+            | "cash"
+            | "debit"
+            | "credit"
+            | "pago-movil"
+            | "zelle",
+        },
       });
       if (result.status === "success") {
         notify(result.status, result.data.message);
@@ -137,6 +138,14 @@ export default function SalePage() {
           product: item.product,
           amount: Number(item.amount),
         })),
+        payment: {
+          method: formData.paymentMethod as
+            | "cash"
+            | "debit"
+            | "credit"
+            | "pago-movil"
+            | "zelle",
+        },
       });
       if (result.status === "success") {
         notify(result.status, result.data.message);
@@ -237,6 +246,20 @@ export default function SalePage() {
           value={formData.customerName}
           readOnly
         />
+        <Select
+          label="Método de pago"
+          placeholder="Seleccione un método de pago"
+          name="paymentMethod"
+          value={formData.paymentMethod}
+          onChange={handleFormChange}
+          required
+        >
+          <option value="cash">Efectivo</option>
+          <option value="debit">Tarjeta de Débito</option>
+          <option value="credit">Tarjeta de Crédito</option>
+          <option value="pago-movil">Pago Móvil</option>
+          <option value="zelle">Zelle</option>
+        </Select>
       </Form>
       <Form>
         <div className="col-span-full flex flex-col items-end gap-4 sm:flex-row">

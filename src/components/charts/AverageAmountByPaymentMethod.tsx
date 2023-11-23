@@ -1,6 +1,6 @@
 "use client";
 
-import { getTotalSalesByCategory } from "@/lib/server/charts";
+import { getAverageAmountByPaymentMethod } from "@/lib/server/charts";
 import {
   BarElement,
   CategoryScale,
@@ -15,21 +15,21 @@ import { Bar } from "react-chartjs-2";
 
 Chart.register(BarElement, CategoryScale, LinearScale, Title, Tooltip);
 
-export default function TotalSalesByCategoryChart() {
+export default function AverageAmountByPaymentMethodChart() {
   const [chartData, setChartData] = useState<ChartData<"bar">>({
     datasets: [],
   });
 
   useEffect(() => {
     (async () => {
-      const result = await getTotalSalesByCategory();
+      const result = await getAverageAmountByPaymentMethod();
       if (result.status === "success") {
-        const rawData = result.data.totalSalesByCategory;
+        const rawData = result.data.averageAmountByPaymentMethod;
         setChartData({
-          labels: rawData.map(({ name }) => name),
+          labels: rawData.map(({ method }) => method),
           datasets: [
             {
-              data: rawData.map(({ count }) => count),
+              data: rawData.map(({ average }) => average),
             },
           ],
         });
@@ -42,26 +42,15 @@ export default function TotalSalesByCategoryChart() {
       <Bar
         data={chartData}
         options={{
-          indexAxis: "y",
-          scales: {
-            x: {
-              ticks: {
-                stepSize: 1,
-              },
-            },
-          },
           plugins: {
             title: {
               display: true,
-              text: "Ventas totales por categoría",
+              text: "Monto promedio por tipo de pago",
             },
             tooltip: {
               callbacks: {
                 label(tooltipItem) {
-                  if (tooltipItem.raw === 1) {
-                    return `${tooltipItem.raw} venta`;
-                  }
-                  return `${tooltipItem.raw} ventas`;
+                  return `$${tooltipItem.raw}`;
                 },
               },
             },

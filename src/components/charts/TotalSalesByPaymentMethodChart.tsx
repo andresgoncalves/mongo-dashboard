@@ -1,6 +1,9 @@
 "use client";
 
-import { getTotalSalesByCategory } from "@/lib/server/charts";
+import {
+  getTotalSalesByCategory,
+  getTotalSalesByPaymentMethod,
+} from "@/lib/server/charts";
 import {
   BarElement,
   CategoryScale,
@@ -15,18 +18,18 @@ import { Bar } from "react-chartjs-2";
 
 Chart.register(BarElement, CategoryScale, LinearScale, Title, Tooltip);
 
-export default function TotalSalesByCategoryChart() {
+export default function TotalSalesByPaymentMethodChart() {
   const [chartData, setChartData] = useState<ChartData<"bar">>({
     datasets: [],
   });
 
   useEffect(() => {
     (async () => {
-      const result = await getTotalSalesByCategory();
+      const result = await getTotalSalesByPaymentMethod();
       if (result.status === "success") {
-        const rawData = result.data.totalSalesByCategory;
+        const rawData = result.data.totalSalesByPaymentMethod;
         setChartData({
-          labels: rawData.map(({ name }) => name),
+          labels: rawData.map(({ method }) => method),
           datasets: [
             {
               data: rawData.map(({ count }) => count),
@@ -42,9 +45,8 @@ export default function TotalSalesByCategoryChart() {
       <Bar
         data={chartData}
         options={{
-          indexAxis: "y",
           scales: {
-            x: {
+            y: {
               ticks: {
                 stepSize: 1,
               },
@@ -53,7 +55,7 @@ export default function TotalSalesByCategoryChart() {
           plugins: {
             title: {
               display: true,
-              text: "Ventas totales por categoría",
+              text: "Ventas totales por método de pago",
             },
             tooltip: {
               callbacks: {

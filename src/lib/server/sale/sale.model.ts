@@ -15,6 +15,9 @@ export interface ISale {
     amount: number;
     price?: number;
   }[];
+  payment: {
+    method: "cash" | "debit" | "credit" | "pago-movil" | "zelle";
+  };
   datetime?: string;
   subtotal?: number;
   taxes?: number;
@@ -39,6 +42,9 @@ export const saleSchema = z.object({
       amount: z.coerce.number().positive("Cantidad inválida"),
     }),
   ),
+  payment: z.object({
+    method: z.enum(["cash", "debit", "credit", "pago-movil", "zelle"]),
+  }),
 });
 
 export const Sales = db.collection<ISale>("sales");

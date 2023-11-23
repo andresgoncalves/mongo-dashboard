@@ -173,8 +173,6 @@ export async function getTotalEarningsByPeriod() {
     >((prev, sale) => [...prev, sale], []),
   );
 
-  console.log(totalEarningsByWeek);
-
   return sendData({ totalEarningsByWeek });
 }
 
@@ -213,4 +211,90 @@ export async function getTotalSalesByCategory() {
   ]).toArray();
 
   return sendData({ totalSalesByCategory });
+}
+
+export async function getAverageAmountByPaymentMethod() {
+  const methodNames = {
+    cash: "Efectivo",
+    debit: "Tarjeta de Débito",
+    credit: "Tarjeta de Crédito",
+    "pago-movil": "Pago Móvil",
+    zelle: "Zelle",
+  };
+
+  const averageAmountByPaymentMethod = await Sales.aggregate<{
+    method: "cash" | "debit" | "credit" | "pago-movil" | "zelle";
+    average: number;
+  }>([
+    {
+      $group: {
+        _id: "$payment.method",
+        average: {
+          $avg: "$total",
+        },
+      },
+    },
+    {
+      $project: {
+        method: "$_id",
+        average: 1,
+      },
+    },
+    {
+      $sort: {
+        average: -1,
+      },
+    },
+  ]).toArray();
+
+  return sendData({
+    averageAmountByPaymentMethod: averageAmountByPaymentMethod.map(
+      ({ method, average }) => ({
+        method: methodNames[method],
+        average,
+      }),
+    ),
+  });
+}
+
+export async function getTotalSalesByPaymentMethod() {
+  const methodNames = {
+    cash: "Efectivo",
+    debit: "Tarjeta de Débito",
+    credit: "Tarjeta de Crédito",
+    "pago-movil": "Pago Móvil",
+    zelle: "Zelle",
+  };
+
+  const totalSalesByPaymentMethod = await Sales.aggregate<{
+    method: "cash" | "debit" | "credit" | "pago-movil" | "zelle";
+    count: number;
+  }>([
+    {
+      $group: {
+        _id: "$payment.method",
+        count: { $count: {} },
+      },
+    },
+    {
+      $project: {
+        method: "$_id",
+        count: 1,
+      },
+    },
+    {
+      $sort: {
+        count: -1,
+      },
+    },
+  ]).toArray();
+
+  return sendData({
+    totalSalesByPaymentMethod: totalSalesByPaymentMethod.map(
+      ({ method, count }) => ({
+        method: methodNames[method],
+        count,
+      }),
+    ),
+  });
 }

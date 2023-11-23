@@ -59,6 +59,11 @@ export async function findSale(id: any) {
 
   const sale = await Sales.aggregate<WithId<ISale>>([
     {
+      $match: {
+        _id: new ObjectId(id),
+      },
+    },
+    {
       $lookup: {
         from: "customers",
         localField: "customer._id",
@@ -108,7 +113,6 @@ export async function findSale(id: any) {
 export async function createSale(data: ISale) {
   const validation = saleSchema.safeParse(data);
   if (!validation.success) {
-    console.log(validation.error);
     return sendError(validation.error);
   }
 

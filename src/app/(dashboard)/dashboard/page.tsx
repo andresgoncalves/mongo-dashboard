@@ -1,9 +1,11 @@
 "use client";
 
+import AverageAmountByPaymentMethodChart from "@/components/charts/AverageAmountByPaymentMethod";
 import ProductCountByCategoryChart from "@/components/charts/ProductCountByCategoryChart";
 import SaleStats from "@/components/charts/SaleStats";
 import TotalEarningsByWeekChart from "@/components/charts/TotalEarningsByWeekChart";
 import TotalSalesByCategoryChart from "@/components/charts/TotalSalesByCategoryChart";
+import TotalSalesByPaymentMethodChart from "@/components/charts/TotalSalesByPaymentMethodChart";
 import TotalSalesByWeekChart from "@/components/charts/TotalSalesByWeekChart";
 import {
   BarElement,
@@ -36,6 +38,8 @@ export default function DashboardPage() {
           <TotalEarningsByWeekChart />
           <TotalSalesByCategoryChart />
           <ProductCountByCategoryChart />
+          <TotalSalesByPaymentMethodChart />
+          <AverageAmountByPaymentMethodChart />
         </div>
       </div>
     </div>

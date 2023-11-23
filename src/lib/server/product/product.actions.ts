@@ -23,7 +23,6 @@ export async function findAllProducts() {
 
 export async function findProduct(id: any) {
   if (!ObjectId.isValid(id)) {
-    console.log(id);
     return sendError("ID de producto inválido");
   }
 
