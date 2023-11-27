@@ -47,6 +47,7 @@ export function sendMessage(message: string): ServerActionMessage {
 }
 
 export function sendError(error: any): ServerActionError {
+  console.error(error);
   if (error instanceof ZodError) {
     return {
       status: "error",

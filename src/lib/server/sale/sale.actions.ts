@@ -158,7 +158,7 @@ export async function createSale(data: ISale) {
       session.withTransaction(async () => {
         const salesResult = await Sales.insertOne(sale);
 
-        if (!result.acknowledged) {
+        if (!salesResult.acknowledged) {
           throw "Error al registrar venta";
         }
 
