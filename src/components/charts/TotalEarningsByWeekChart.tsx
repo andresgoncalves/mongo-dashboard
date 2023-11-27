@@ -59,7 +59,7 @@ export default function TotalEarningsByWeekChart() {
             tooltip: {
               callbacks: {
                 label(tooltipItem) {
-                  return `$ ${tooltipItem.raw}`;
+                  return `$ ${(tooltipItem.raw as Number).toFixed(2)}`;
                 },
               },
             },

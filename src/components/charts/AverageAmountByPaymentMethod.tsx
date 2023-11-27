@@ -50,7 +50,7 @@ export default function AverageAmountByPaymentMethodChart() {
             tooltip: {
               callbacks: {
                 label(tooltipItem) {
-                  return `$${tooltipItem.raw}`;
+                  return `$ ${(tooltipItem.raw as Number).toFixed(2)}`;
                 },
               },
             },

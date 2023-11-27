@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { Products } from "../product/product.model";
 import { sendData, sendError, sendMessage } from "../utils";
 import { ISale, Sales, saleSchema } from "./sale.model";
+import { mongoClient } from "../db";
 
 export async function findAllSales() {
   const sales = await Sales.aggregate<WithId<ISale>>([
@@ -124,6 +125,8 @@ export async function createSale(data: ISale) {
         const product = await Products.findOne({ _id: item.product._id });
         if (!product) {
           throw "Producto no encontrado";
+        } else if (product.available < item.amount) {
+          throw "Cantidad de producto no disponible";
         }
         return {
           ...item,
@@ -150,14 +153,47 @@ export async function createSale(data: ISale) {
     return sendError(error);
   }
 
-  const result = await Sales.insertOne(sale);
+  try {
+    const result = await mongoClient.withSession((session) =>
+      session.withTransaction(async () => {
+        const salesResult = await Sales.insertOne(sale);
 
-  if (!result.acknowledged) {
-    return sendError("Error al registrar venta");
+        if (!result.acknowledged) {
+          throw "Error al registrar venta";
+        }
+
+        await Promise.all(
+          sale.items.map(async (item) => {
+            const productResult = await Products.updateOne(
+              {
+                _id: new ObjectId(item.product._id),
+                available: { $gte: item.amount },
+              },
+              {
+                $inc: {
+                  available: -item.amount,
+                },
+              },
+            );
+            if (!productResult.acknowledged) {
+              throw "Error al procesar venta";
+            } else if (productResult.matchedCount === 0) {
+              throw "Producto no encontrado";
+            }
+          }),
+        );
+        return salesResult;
+      }),
+    );
+
+    revalidatePath("/(dashboard)/sales");
+    return sendData(
+      { _id: result.insertedId },
+      "Venta registrada exitosamente",
+    );
+  } catch (error) {
+    return sendError(error);
   }
-
-  revalidatePath("/(dashboard)/sales");
-  return sendData({ _id: result.insertedId }, "Venta registrada exitosamente");
 }
 
 export async function updateSale(id: any, data: Partial<ISale>) {
@@ -205,17 +241,55 @@ export async function updateSale(id: any, data: Partial<ISale>) {
     }
   }
 
-  const result = await Sales.updateOne(
-    { _id: new ObjectId(id) },
-    { $set: { ...sale } },
-  );
+  try {
+    const result = await mongoClient.withSession((session) =>
+      session.withTransaction(async () => {
+        const oldSales = await Sales.findOne({ _id: new ObjectId(id) });
+        const salesResult = await Sales.updateOne(
+          { _id: new ObjectId(id) },
+          { $set: { ...sale } },
+        );
 
-  if (!result.acknowledged) {
-    return sendError("Error al actualizar venta");
-  } else if (result.matchedCount === 0) {
-    return sendError("Venta no encontrada");
+        if (!salesResult.acknowledged) {
+          throw "Error al actualizar venta";
+        } else if (!oldSales || salesResult.matchedCount === 0) {
+          throw "Venta no encontrada";
+        }
+
+        if (sale.items) {
+          await Promise.all(
+            oldSales.items.map(async (oldItem) => {
+              const productResult = await Products.updateOne(
+                {
+                  _id: new ObjectId(oldItem.product._id),
+                },
+                {
+                  $inc: {
+                    available:
+                      oldItem.amount -
+                      (sale.items?.find((item) =>
+                        new ObjectId(item.product._id).equals(
+                          oldItem.product._id,
+                        ),
+                      )?.amount || 0),
+                  },
+                },
+              );
+              if (!productResult.acknowledged) {
+                throw "Error al procesar venta";
+              } else if (productResult.matchedCount === 0) {
+                throw "Producto no encontrado";
+              }
+            }),
+          );
+        }
+        return salesResult;
+      }),
+    );
+
+    revalidatePath("/(dashboard)/sales");
+    return sendMessage("Venta actualizada exitosamente");
+  } catch (error) {
+    return sendError(error);
   }
-
-  revalidatePath("/(dashboard)/sales");
-  return sendMessage("Venta actualizada exitosamente");
 }

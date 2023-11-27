@@ -22,13 +22,7 @@ export default function SaleStats() {
     <div className="stats stats-vertical shadow sm:stats-horizontal">
       <div className="stat gap-2">
         <div className="stat-title">Ingresos totales</div>
-        <div className="stat-value">
-          ${" "}
-          {Intl.NumberFormat("es-ve", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          }).format(stats.totalEarnings)}
-        </div>
+        <div className="stat-value">$ {stats.totalEarnings.toFixed(2)}</div>
       </div>
       <div className="stat gap-2">
         <div className="stat-title">Ventas totales</div>
