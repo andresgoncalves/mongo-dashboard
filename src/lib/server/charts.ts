@@ -71,15 +71,16 @@ export async function getProductCountByCategory() {
 
 export async function getTotalSalesByPeriod() {
   const currentDate = new Date();
-  currentDate.setHours(0);
+  currentDate.setUTCHours(24 - 4, 0, 0, 0);
 
   const daysOfWeek = Array(7)
     .fill(0)
     .map((_, key) => {
       const start = new Date(currentDate);
-      start.setDate(start.getDate() - key);
-      const end = new Date(currentDate);
-      end.setDate(currentDate.getDate() - key + 1);
+      start.setUTCDate(start.getUTCDate() - key - 1);
+      const end = new Date(start);
+      end.setUTCDate(start.getUTCDate() + 1);
+
       return {
         start,
         end,
@@ -125,16 +126,15 @@ export async function getTotalSalesByPeriod() {
 
 export async function getTotalEarningsByPeriod() {
   const currentDate = new Date();
-  currentDate.setHours(0);
+  currentDate.setUTCHours(24 - 4, 0, 0, 0);
 
   const daysOfWeek = Array(7)
     .fill(0)
     .map((_, key) => {
       const start = new Date(currentDate);
-      start.setUTCHours(-4, 0, 0, 0);
-      start.setUTCDate(start.getUTCDate() - key);
+      start.setUTCDate(start.getUTCDate() - key - 1);
       const end = new Date(start);
-      end.setUTCDate(end.getUTCDate() + 1);
+      end.setUTCDate(start.getUTCDate() + 1);
 
       return {
         start,
