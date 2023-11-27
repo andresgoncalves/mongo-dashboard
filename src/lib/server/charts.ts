@@ -131,10 +131,11 @@ export async function getTotalEarningsByPeriod() {
     .fill(0)
     .map((_, key) => {
       const start = new Date(currentDate);
-      start.setHours(0, 0, 0, 0);
-      start.setDate(start.getDate() - key);
+      start.setUTCHours(-4, 0, 0, 0);
+      start.setUTCDate(start.getUTCDate() - key);
       const end = new Date(start);
-      end.setDate(end.getDate() + 1);
+      end.setUTCDate(end.getUTCDate() + 1);
+
       return {
         start,
         end,
@@ -173,6 +174,8 @@ export async function getTotalEarningsByPeriod() {
       }[]
     >((prev, sale) => [...prev, sale], []),
   );
+
+  console.log(totalEarningsByWeek);
 
   return sendData({ totalEarningsByWeek });
 }
