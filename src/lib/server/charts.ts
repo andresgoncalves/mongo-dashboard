@@ -133,8 +133,8 @@ export async function getTotalEarningsByPeriod() {
       const start = new Date(currentDate);
       start.setHours(0, 0, 0, 0);
       start.setDate(start.getDate() - key);
-      const end = new Date(currentDate);
-      end.setDate(currentDate.getDate() - key + 1);
+      const end = new Date(start);
+      end.setDate(end.getDate() + 1);
       return {
         start,
         end,
