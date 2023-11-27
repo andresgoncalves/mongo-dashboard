@@ -61,7 +61,7 @@ export default function TotalSalesByWeekChart() {
           plugins: {
             title: {
               display: true,
-              text: "Ventas totales por semana",
+              text: "Ventas totales esta semana",
             },
             tooltip: {
               callbacks: {

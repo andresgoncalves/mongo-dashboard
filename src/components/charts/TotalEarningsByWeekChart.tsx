@@ -54,7 +54,7 @@ export default function TotalEarningsByWeekChart() {
           plugins: {
             title: {
               display: true,
-              text: "Ingresos totales por semana",
+              text: "Ingresos totales esta semana",
             },
             tooltip: {
               callbacks: {
