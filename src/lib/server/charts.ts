@@ -131,6 +131,7 @@ export async function getTotalEarningsByPeriod() {
     .fill(0)
     .map((_, key) => {
       const start = new Date(currentDate);
+      start.setHours(0, 0, 0, 0);
       start.setDate(start.getDate() - key);
       const end = new Date(currentDate);
       end.setDate(currentDate.getDate() - key + 1);
